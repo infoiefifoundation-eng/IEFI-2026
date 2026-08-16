@@ -6,6 +6,7 @@
 <title>IEFI — Head of Secretariat Nomination</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Source+Sans+3:wght@400;500;600;700&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
   :root{
     --green-950:#0f2b22;
@@ -182,6 +183,15 @@
     display:inline-block; margin-top:18px; padding:8px 16px;
     background:var(--sage-100); border-radius:3px; font-family:monospace; font-size:13px; color:var(--green-900);
   }
+  .download-btn{
+    display:inline-flex; align-items:center; gap:8px;
+    margin-top:22px; background:var(--green-900); color:var(--cream-50);
+    border:none; font-family:'Source Sans 3', sans-serif; font-weight:600; font-size:14px;
+    padding:12px 22px; border-radius:3px; cursor:pointer;
+    transition:background .15s;
+  }
+  .download-btn:hover{background:var(--green-800);}
+  .download-note{font-size:12.5px; color:var(--ink-600); margin-top:12px; max-width:44ch; margin-left:auto; margin-right:auto;}
 
   footer{text-align:center; padding:30px 20px 10px; font-size:12px; color:var(--ink-600);}
 </style>
@@ -386,6 +396,9 @@
       <h2>Nomination received</h2>
       <p>Jazakumullahu khairan for submitting. The Secretariat committee will review all nominations and reach out with next steps in shaa Allah.</p>
       <div class="ref-code" id="refCode"></div>
+      <br>
+      <button type="button" class="download-btn" id="downloadBtn">⬇ Download my application (PDF)</button>
+      <p class="download-note">Keep a copy for your own records. The vetting committee receives the same details automatically by email.</p>
     </div>
 
   </main>
@@ -501,9 +514,6 @@ document.getElementById('nomForm').addEventListener('submit', async function(e){
   submitBtn.disabled = true;
   document.getElementById('submitStatus').textContent = 'Submitting...';
 
-  // ⚠️ Replace the URL below with your own Formspree endpoint
-  // Sign up free at https://formspree.io, create a form, and paste the
-  // endpoint it gives you (looks like https://formspree.io/f/xxxxxxxx)
   const FORMSPREE_ENDPOINT = "https://formspree.io/f/meajlywe";
 
   try {
@@ -518,11 +528,107 @@ document.getElementById('nomForm').addEventListener('submit', async function(e){
     document.getElementById('nomForm').style.display = 'none';
     document.getElementById('successCard').style.display = 'block';
     document.getElementById('refCode').textContent = 'Reference: ' + submission.refCode;
+    lastSubmission = submission;
   } catch(err) {
     document.getElementById('submitStatus').textContent = 'Something went wrong. Please try again.';
     submitBtn.disabled = false;
     console.error(err);
   }
+});
+
+// ---------- PDF download ----------
+let lastSubmission = null;
+
+function buildApplicationPdf(sub){
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ unit: 'pt', format: 'a4' });
+  const pageWidth = doc.internal.pageSize.getWidth();
+  const margin = 48;
+  let y = 60;
+
+  doc.setFont('times', 'bold');
+  doc.setFontSize(16);
+  doc.setTextColor(20, 52, 42);
+  doc.text('Islamic Enlightenment Foundation International', margin, y);
+  y += 22;
+  doc.setFontSize(13);
+  doc.text('Head of Secretariat — Nomination Application', margin, y);
+  y += 20;
+
+  doc.setDrawColor(185, 139, 51);
+  doc.setLineWidth(1);
+  doc.line(margin, y, pageWidth - margin, y);
+  y += 26;
+
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(10);
+  doc.setTextColor(75, 84, 69);
+  doc.text('Reference: ' + sub.refCode, margin, y);
+  doc.text('Submitted: ' + new Date(sub.submittedAt).toLocaleString(), pageWidth - margin, y, { align: 'right' });
+  y += 26;
+
+  const rows = [
+    ['Nomination type', sub.nominationType === 'self' ? 'Self-nomination' : 'Nominated by another member'],
+  ];
+  if(sub.nominationType === 'other'){
+    rows.push(['Nominated by', sub.nominatorName + ' (' + sub.nominatorPhone + ')']);
+  }
+  rows.push(
+    ['Candidate name', sub.candidateName],
+    ['Age', sub.candidateAge || '—'],
+    ['Phone / WhatsApp', sub.candidatePhone],
+    ['Email', sub.candidateEmail || '—'],
+    ['Membership duration', sub.membershipDuration],
+    ['Current role', sub.currentRole || '—'],
+    ['Why they should be considered', sub.whyConsider],
+    ['Experience / skills', sub.experience || '—'],
+    ['Tools & abilities', (sub.skills && sub.skills.length) ? sub.skills.join(', ') : '—'],
+    ['Islamic knowledge', sub.islamicKnowledge],
+    ['Availability', sub.availability],
+    ['Additional notes', sub.notes || '—'],
+  );
+
+  const labelWidth = 150;
+  const valueWidth = pageWidth - margin * 2 - labelWidth;
+
+  rows.forEach(([label, value]) => {
+    const valueLines = doc.splitTextToSize(String(value), valueWidth);
+    const rowHeight = Math.max(16, valueLines.length * 13 + 6);
+
+    if(y + rowHeight > doc.internal.pageSize.getHeight() - 50){
+      doc.addPage();
+      y = 60;
+    }
+
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(9.5);
+    doc.setTextColor(20, 52, 42);
+    doc.text(label, margin, y);
+
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(10);
+    doc.setTextColor(32, 38, 30);
+    doc.text(valueLines, margin + labelWidth, y);
+
+    y += rowHeight;
+    doc.setDrawColor(217, 207, 180);
+    doc.setLineWidth(0.5);
+    doc.line(margin, y - 6, pageWidth - margin, y - 6);
+  });
+
+  y += 10;
+  doc.setFont('helvetica', 'italic');
+  doc.setFontSize(9);
+  doc.setTextColor(75, 84, 69);
+  doc.text('Service to Allah and to Humanity', margin, doc.internal.pageSize.getHeight() - 30);
+
+  return doc;
+}
+
+document.getElementById('downloadBtn').addEventListener('click', () => {
+  if(!lastSubmission) return;
+  const doc = buildApplicationPdf(lastSubmission);
+  doc.save('IEFI-Nomination-' + lastSubmission.refCode + '.pdf');
 });
 </script>
 </body>
