@@ -142,7 +142,7 @@
   @media(max-width:560px){.grid-2{grid-template-columns:1fr;}}
 
   .self-block{
-    margin-top:14px; padding-top:14px; border-top:1px dashed var(--line);
+    margin-top:10px; margin-bottom:4px; padding:14px 13px 4px 13px;
     display:none;
   }
   .self-block.show{display:block;}
@@ -193,6 +193,30 @@
   .download-btn:hover{background:var(--green-800);}
   .download-note{font-size:12.5px; color:var(--ink-600); margin-top:12px; max-width:44ch; margin-left:auto; margin-right:auto;}
 
+  /* ---------- Nominee list ---------- */
+  .list-header{display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;}
+  .refresh-btn{
+    background:none; border:1px solid var(--line); color:var(--green-900);
+    font-size:12.5px; font-weight:600; padding:6px 12px; border-radius:100px; cursor:pointer;
+  }
+  .refresh-btn:hover{border-color:var(--gold-600);}
+  .nominee-row{
+    display:flex; justify-content:space-between; align-items:flex-start; gap:12px;
+    padding:14px 0; border-bottom:1px solid var(--line);
+  }
+  .nominee-row:last-child{border-bottom:none;}
+  .nominee-name{font-family:'Fraunces', serif; font-weight:600; font-size:15px; color:var(--green-900);}
+  .nominee-meta{font-size:12px; color:var(--ink-600); margin-top:2px;}
+  .status-pill{
+    font-size:11px; font-weight:600; padding:4px 10px; border-radius:100px; white-space:nowrap;
+  }
+  .status-pending{background:#f5ead0; color:#8a6414;}
+  .status-na{background:var(--sage-100); color:var(--ink-600);}
+  .list-empty, .list-fallback{
+    font-size:13.5px; color:var(--ink-600); text-align:center; padding:24px 10px;
+  }
+  .list-fallback{background:var(--sage-100); border-radius:3px;}
+
   footer{text-align:center; padding:30px 20px 10px; font-size:12px; color:var(--ink-600);}
 </style>
 </head>
@@ -221,7 +245,7 @@
     <h1>Head of Secretariat<br>Nomination Portal</h1>
     <p class="lede">Mohammed Mubarak Abdul-Nasir is stepping down as Head of Secretariat. Use this form to nominate yourself or a member you trust — the details below are what the vetting committee will use to review each nomination fairly.</p>
     <div class="meta-strip">
-      <div class="meta-pill">📋 <b>11</b> fields</div>
+      <div class="meta-pill">📋 <b>12</b> fields</div>
       <div class="meta-pill">⏱ ~<b>6</b> minutes</div>
       <div class="meta-pill">🔒 Shared with committee only</div>
     </div>
@@ -244,32 +268,33 @@
               <input type="radio" name="nomType" value="self" required>
               <div><div class="opt-text">I'm nominating myself</div><div class="opt-sub">You believe you're a good fit for the role</div></div>
             </label>
-            <label class="radio-option" data-value="other">
-              <input type="radio" name="nomType" value="other">
-              <div><div class="opt-text">I'm nominating another member</div><div class="opt-sub">You'll share the details as the person you are nominating</div></div>
-            </label>
+            <div>
+              <label class="radio-option" data-value="other">
+                <input type="radio" name="nomType" value="other">
+                <div><div class="opt-text">I'm nominating another member</div><div class="opt-sub">You'll share the details as the person you are nominating</div></div>
+              </label>
+              <div class="self-block" id="nominatorBlock">
+                <div class="field">
+                  <label>Your full name <span class="required">*</span></label>
+                  <input type="text" id="nominatorName" placeholder="e.g. Aisha Suleiman">
+                  <div class="error-msg" id="err-nominatorName">Please enter your name.</div>
+                </div>
+                <div class="field">
+                  <label>Your phone / WhatsApp number <span class="required">*</span></label>
+                  <input type="tel" id="nominatorPhone" placeholder="e.g. 024 000 0000">
+                  <div class="error-msg" id="err-nominatorPhone">Please enter a contact number.</div>
+                </div>
+              </div>
+            </div>
           </div>
           <div class="error-msg" id="err-nomType">Please select one option.</div>
-        </div>
-
-        <div class="self-block" id="nominatorBlock">
-          <div class="field">
-            <label>Your full name <span class="required">*</span></label>
-            <input type="text" id="nominatorName" placeholder="e.g. Aisha Suleiman">
-            <div class="error-msg" id="err-nominatorName">Please enter your name.</div>
-          </div>
-          <div class="field">
-            <label>Your phone / WhatsApp number <span class="required">*</span></label>
-            <input type="tel" id="nominatorPhone" placeholder="e.g. 024 000 0000">
-            <div class="error-msg" id="err-nominatorPhone">Please enter a contact number.</div>
-          </div>
         </div>
       </div>
 
       <!-- SECTION 2 -->
       <div class="card">
         <div class="section-label"><span class="section-num">02</span><span class="section-title">Candidate information</span></div>
-        <p class="section-desc">Basic details for the person being considered for the role.</p>
+        <p class="section-desc">Basic details for the person being considered for the role. Their email is required — if nominated by someone else, we'll email them to confirm they accept the nomination.</p>
 
         <div class="grid-2">
           <div class="field">
@@ -283,6 +308,15 @@
           </div>
         </div>
 
+        <div class="field">
+          <label>Gender <span class="required">*</span></label>
+          <div class="radio-group" id="genderGroup">
+            <label class="radio-option" data-value="Male"><input type="radio" name="gender" value="Male" required><div class="opt-text">Male</div></label>
+            <label class="radio-option" data-value="Female"><input type="radio" name="gender" value="Female"><div class="opt-text">Female</div></label>
+          </div>
+          <div class="error-msg" id="err-gender">Please select an option.</div>
+        </div>
+
         <div class="grid-2">
           <div class="field">
             <label>Phone / WhatsApp number <span class="required">*</span></label>
@@ -290,8 +324,9 @@
             <div class="error-msg" id="err-candPhone">Please enter a contact number.</div>
           </div>
           <div class="field">
-            <label>Email <span class="hint">(optional)</span></label>
-            <input type="email" id="candEmail" placeholder="e.g. name@email.com">
+            <label>Email <span class="required">*</span></label>
+            <input type="email" id="candEmail" placeholder="e.g. name@email.com" required>
+            <div class="error-msg" id="err-candEmail">Please enter a valid email — it's used to request the nominee's acceptance.</div>
           </div>
         </div>
 
@@ -398,10 +433,21 @@
       <div class="ref-code" id="refCode"></div>
       <br>
       <button type="button" class="download-btn" id="downloadBtn">⬇ Download my application (PDF)</button>
-      <p class="download-note">Keep a copy for your own records. The vetting committee receives the same details automatically by email.</p>
+      <p class="download-note">This is your personal copy for your own records — the vetting committee already received this same PDF automatically by email.</p>
     </div>
 
   </main>
+
+  <div class="card" style="margin-top:22px;">
+    <div class="list-header">
+      <div class="section-label" style="margin-bottom:0;"><span class="section-title">Current Nominees</span></div>
+      <button type="button" class="refresh-btn" id="refreshListBtn">↻ Refresh</button>
+    </div>
+    <p class="section-desc">Updates automatically as nominations come in.</p>
+    <div id="nomineeListContent">
+      <div class="list-empty">Loading nominees…</div>
+    </div>
+  </div>
 
   <footer>Islamic Enlightenment Foundation International — Service to Allah and to Humanity</footer>
 </div>
@@ -430,6 +476,13 @@ document.querySelectorAll('#availGroup .radio-option').forEach(opt => {
   });
 });
 
+document.querySelectorAll('#genderGroup .radio-option').forEach(opt => {
+  opt.addEventListener('click', () => {
+    document.querySelectorAll('#genderGroup .radio-option').forEach(o => o.classList.remove('checked'));
+    opt.classList.add('checked');
+  });
+});
+
 function clearErrors(){
   document.querySelectorAll('.error-msg').forEach(e => e.classList.remove('show'));
   document.querySelectorAll('.field').forEach(f => f.classList.remove('invalid'));
@@ -446,6 +499,11 @@ function genRefCode(){
   for(let i=0;i<5;i++) code += chars[Math.floor(Math.random()*chars.length)];
   return code;
 }
+
+// ⚠️ Replace with your own Google Apps Script Web App URL.
+// This powers two things: (1) emailing the nominee to request their
+// acceptance, and (2) the live "Current Nominees" list below.
+const APPS_SCRIPT_ENDPOINT = "https://script.google.com/macros/s/AKfycbyJsmdZyrvYZwecALb6EHKZthplPLyP_dcaSWjS8GmikKmBnlzGz5ttsox539ryAfU/exec";
 
 document.getElementById('nomForm').addEventListener('submit', async function(e){
   e.preventDefault();
@@ -468,6 +526,13 @@ document.getElementById('nomForm').addEventListener('submit', async function(e){
 
   const candPhone = document.getElementById('candPhone').value.trim();
   if(!candPhone){ showError('candPhone'); valid = false; }
+
+  const gender = document.querySelector('input[name=gender]:checked');
+  if(!gender){ showError('gender'); valid = false; }
+
+  const candEmail = document.getElementById('candEmail').value.trim();
+  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if(!candEmail || !emailPattern.test(candEmail)){ showError('candEmail'); valid = false; }
 
   const candDuration = document.getElementById('candDuration').value;
   if(!candDuration){ showError('candDuration'); valid = false; }
@@ -498,6 +563,7 @@ document.getElementById('nomForm').addEventListener('submit', async function(e){
     nominatorName, nominatorPhone,
     candidateName: candName,
     candidateAge: document.getElementById('candAge').value.trim(),
+    candidateGender: gender.value,
     candidatePhone: candPhone,
     candidateEmail: document.getElementById('candEmail').value.trim(),
     membershipDuration: candDuration,
@@ -517,18 +583,70 @@ document.getElementById('nomForm').addEventListener('submit', async function(e){
   const FORMSPREE_ENDPOINT = "https://formspree.io/f/meajlywe";
 
   try {
-    const res = await fetch(FORMSPREE_ENDPOINT, {
+    // Build the PDF now so it can be attached to the committee's email
+    let pdfBlob = null;
+    try {
+      const pdfDoc = buildApplicationPdf(submission);
+      pdfBlob = pdfDoc.output('blob');
+    } catch(pdfErr){
+      console.error('PDF generation failed, submitting without attachment:', pdfErr);
+    }
+
+    const formData = new FormData();
+    Object.entries(submission).forEach(([key, value]) => {
+      formData.append(key, Array.isArray(value) ? value.join(', ') : value);
+    });
+    if(pdfBlob){
+      formData.append('attachment', pdfBlob, 'IEFI-Nomination-' + submission.refCode + '.pdf');
+    }
+
+    let res = await fetch(FORMSPREE_ENDPOINT, {
       method: "POST",
-      headers: { "Accept": "application/json", "Content-Type": "application/json" },
-      body: JSON.stringify(submission)
+      headers: { "Accept": "application/json" },
+      body: formData
     });
 
-    if(!res.ok) throw new Error('Submission failed');
+    // If sending with the PDF attached fails, retry without it so the
+    // nomination itself still goes through.
+    if(!res.ok && pdfBlob){
+      console.warn('Submission with attachment failed (status ' + res.status + '), retrying without attachment.');
+      const plainFormData = new FormData();
+      Object.entries(submission).forEach(([key, value]) => {
+        plainFormData.append(key, Array.isArray(value) ? value.join(', ') : value);
+      });
+      res = await fetch(FORMSPREE_ENDPOINT, {
+        method: "POST",
+        headers: { "Accept": "application/json" },
+        body: plainFormData
+      });
+    }
+
+    if(!res.ok){
+      const bodyText = await res.text().catch(() => '');
+      console.error('Formspree submission failed:', res.status, bodyText);
+      throw new Error('Submission failed with status ' + res.status);
+    }
+
+    // Fire off the Apps Script call (nominee email + live list update).
+    // This runs AFTER the committee's copy is already secured via Formspree,
+    // so if this fails, the nomination itself is never lost — the committee
+    // just won't get the automated nominee-acceptance email or list entry,
+    // and can follow up manually using the details already emailed to them.
+    try {
+      await fetch(APPS_SCRIPT_ENDPOINT, {
+        method: "POST",
+        headers: { "Content-Type": "text/plain;charset=utf-8" }, // avoids CORS preflight on Apps Script
+        body: JSON.stringify(submission)
+      });
+    } catch(scriptErr){
+      console.warn('Apps Script call failed — nominee email / live list update may not have happened:', scriptErr);
+    }
 
     document.getElementById('nomForm').style.display = 'none';
     document.getElementById('successCard').style.display = 'block';
     document.getElementById('refCode').textContent = 'Reference: ' + submission.refCode;
     lastSubmission = submission;
+    refreshNomineeList();
   } catch(err) {
     document.getElementById('submitStatus').textContent = 'Something went wrong. Please try again.';
     submitBtn.disabled = false;
@@ -536,7 +654,7 @@ document.getElementById('nomForm').addEventListener('submit', async function(e){
   }
 });
 
-// ---------- PDF download ----------
+// ---------- PDF builder ----------
 let lastSubmission = null;
 
 function buildApplicationPdf(sub){
@@ -576,6 +694,7 @@ function buildApplicationPdf(sub){
   rows.push(
     ['Candidate name', sub.candidateName],
     ['Age', sub.candidateAge || '—'],
+    ['Gender', sub.candidateGender],
     ['Phone / WhatsApp', sub.candidatePhone],
     ['Email', sub.candidateEmail || '—'],
     ['Membership duration', sub.membershipDuration],
@@ -593,7 +712,7 @@ function buildApplicationPdf(sub){
 
   rows.forEach(([label, value]) => {
     const valueLines = doc.splitTextToSize(String(value), valueWidth);
-    const rowHeight = Math.max(16, valueLines.length * 13 + 6);
+    const rowHeight = Math.max(22, valueLines.length * 13 + 10);
 
     if(y + rowHeight > doc.internal.pageSize.getHeight() - 50){
       doc.addPage();
@@ -611,9 +730,6 @@ function buildApplicationPdf(sub){
     doc.text(valueLines, margin + labelWidth, y);
 
     y += rowHeight;
-    doc.setDrawColor(217, 207, 180);
-    doc.setLineWidth(0.5);
-    doc.line(margin, y - 6, pageWidth - margin, y - 6);
   });
 
   y += 10;
@@ -630,6 +746,60 @@ document.getElementById('downloadBtn').addEventListener('click', () => {
   const doc = buildApplicationPdf(lastSubmission);
   doc.save('IEFI-Nomination-' + lastSubmission.refCode + '.pdf');
 });
+
+// ---------- Live nominee list ----------
+function escapeHtml(str){
+  if(str === undefined || str === null) return '';
+  return String(str)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;').replace(/'/g,'&#039;');
+}
+
+async function refreshNomineeList(){
+  const content = document.getElementById('nomineeListContent');
+
+  if(!APPS_SCRIPT_ENDPOINT || APPS_SCRIPT_ENDPOINT.includes('YOUR_DEPLOYMENT_ID')){
+    content.innerHTML = '<div class="list-fallback">The live nominee tracker isn\'t connected yet. Nominations are still being received and emailed to the committee as normal.</div>';
+    return;
+  }
+
+  try {
+    const res = await fetch(APPS_SCRIPT_ENDPOINT, { method: 'GET' });
+    if(!res.ok) throw new Error('Bad response: ' + res.status);
+    const rows = await res.json();
+
+    if(!Array.isArray(rows) || rows.length === 0){
+      content.innerHTML = '<div class="list-empty">No nominations yet — be the first!</div>';
+      return;
+    }
+
+    rows.sort((a, b) => new Date(b.Timestamp) - new Date(a.Timestamp));
+
+    content.innerHTML = rows.map(r => {
+      const isOther = r['Nomination Type'] === 'other';
+      const statusClass = isOther ? 'status-pending' : 'status-na';
+      const statusText = isOther ? 'Pending acceptance' : 'Self-nominated';
+      return `
+        <div class="nominee-row">
+          <div>
+            <div class="nominee-name">${escapeHtml(r['Candidate Name'])}</div>
+            <div class="nominee-meta">${escapeHtml(r['Reference'])} · ${escapeHtml(r['Membership Duration'])} member</div>
+          </div>
+          <span class="status-pill ${statusClass}">${statusText}</span>
+        </div>
+      `;
+    }).join('');
+  } catch(err){
+    console.warn('Could not load nominee list:', err);
+    content.innerHTML = '<div class="list-fallback">Couldn\'t load the live list right now. Nominations are still going through by email as usual — try refreshing in a moment.</div>';
+  }
+}
+
+document.getElementById('refreshListBtn').addEventListener('click', refreshNomineeList);
+
+// Initial load + gentle auto-refresh every 30 seconds
+refreshNomineeList();
+setInterval(refreshNomineeList, 30000);
 </script>
 </body>
 </html>
