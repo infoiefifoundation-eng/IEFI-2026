@@ -331,6 +331,12 @@
                   <input type="tel" id="nomineePhone" placeholder="e.g. 024 000 0000">
                   <div class="error-msg" id="err-nomineePhone">Please enter the nominee's contact number.</div>
                 </div>
+                <div class="field">
+                  <label class="chk-option" style="align-items:center; cursor:pointer;">
+                    <input type="checkbox" id="notifyWhatsApp" checked>
+                    <span>Also send the nominee a WhatsApp invite <span class="hint">(recommended — after you submit, we'll open WhatsApp with the message ready for you to send)</span></span>
+                  </label>
+                </div>
               </div>
             </div>
           </div>
@@ -484,6 +490,8 @@
       <p id="successBody">Jazakumullahu khairan for submitting. The Secretariat committee will review all nominations and reach out with next steps in shaa Allah.</p>
       <div class="ref-code" id="refCode"></div>
       <br>
+      <button type="button" class="download-btn" id="whatsappBtn" style="display:none;">📲 Open WhatsApp to send the invite</button>
+      <p class="download-note" id="whatsappNote" style="display:none;">We've already emailed the nominee automatically — this just lets you follow up with a personal WhatsApp message too.</p>
       <button type="button" class="download-btn" id="downloadBtn" style="display:none;">⬇ Download my application (PDF)</button>
       <p class="download-note" id="downloadNote" style="display:none;">This is your personal copy for your own records — the vetting committee already received this same PDF automatically by email.</p>
     </div>
@@ -727,6 +735,40 @@ function escapeHtml(str){
 const APPS_SCRIPT_ENDPOINT = "https://script.google.com/macros/s/AKfycbyJsmdZyrvYZwecALb6EHKZthplPLyP_dcaSWjS8GmikKmBnlzGz5ttsox539ryAfU/exec";
 // ⚠️ Replace with your own Formspree endpoint.
 const FORMSPREE_ENDPOINT = "https://formspree.io/f/meajlywe";
+// Must match BASE_URL in the Apps Script backend.
+const PORTAL_BASE_URL = "https://infoiefifoundation-eng.github.io/IEFI-2026/";
+
+// ---------- WhatsApp tap-to-send ----------
+// Best-effort: assumes Ghana numbers (default country code 233) when a
+// number is entered without a country code, since that's the org's home
+// country. Adjust the default below if that changes.
+function toWhatsAppDigits(phone){
+  let digits = String(phone || '').replace(/\D/g, '');
+  if(!digits) return '';
+  if(digits.startsWith('0')) digits = '233' + digits.slice(1);
+  else if(!digits.startsWith('233') && digits.length <= 10) digits = '233' + digits;
+  return digits;
+}
+
+function buildWhatsAppInviteLink(payload){
+  const portalLink = PORTAL_BASE_URL +
+    '?ref=' + encodeURIComponent(payload.refCode) +
+    '&name=' + encodeURIComponent(payload.nomineeName || '') +
+    '&email=' + encodeURIComponent(payload.nomineeEmail || '') +
+    '&phone=' + encodeURIComponent(payload.nomineePhone || '') +
+    '&nominatorName=' + encodeURIComponent(payload.nominatorName || '') +
+    '&nominatorPhone=' + encodeURIComponent(payload.nominatorPhone || '') +
+    '&position=' + encodeURIComponent(payload.position || '');
+
+  const message =
+    'Assalamu alaikum ' + payload.nomineeName + ',\n\n' +
+    (payload.nominatorName || 'A fellow IEFI member') + ' has nominated you for ' +
+    payload.position + ' at IEFI. Tap the link below to accept and complete a short application:\n\n' +
+    portalLink + '\n\nReference: ' + payload.refCode;
+
+  const digits = toWhatsAppDigits(payload.nomineePhone);
+  return 'https://wa.me/' + digits + '?text=' + encodeURIComponent(message);
+}
 
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -747,6 +789,7 @@ document.getElementById('nomForm').addEventListener('submit', async function(e){
     const nomineeName = document.getElementById('nomineeName').value.trim();
     const nomineeEmail = document.getElementById('nomineeEmail').value.trim();
     const nomineePhone = document.getElementById('nomineePhone').value.trim();
+    const notifyWhatsApp = document.getElementById('notifyWhatsApp').checked;
 
     if(!nominatorName){ showError('nominatorName'); valid = false; }
     if(!nominatorPhone){ showError('nominatorPhone'); valid = false; }
@@ -771,7 +814,8 @@ document.getElementById('nomForm').addEventListener('submit', async function(e){
       nominatorPhone,
       nomineeName,
       nomineeEmail,
-      nomineePhone
+      nomineePhone,
+      notifyWhatsApp
     };
 
     const submitBtn = document.getElementById('submitBtn');
@@ -806,6 +850,18 @@ document.getElementById('nomForm').addEventListener('submit', async function(e){
       document.getElementById('refCode').textContent = 'Reference: ' + payload.refCode;
       document.getElementById('downloadBtn').style.display = 'none';
       document.getElementById('downloadNote').style.display = 'none';
+
+      const whatsappBtn = document.getElementById('whatsappBtn');
+      const whatsappNote = document.getElementById('whatsappNote');
+      if(notifyWhatsApp){
+        const waLink = buildWhatsAppInviteLink(payload);
+        whatsappBtn.onclick = () => window.open(waLink, '_blank');
+        whatsappBtn.style.display = 'inline-flex';
+        whatsappNote.style.display = 'block';
+      } else {
+        whatsappBtn.style.display = 'none';
+        whatsappNote.style.display = 'none';
+      }
     } catch(err) {
       document.getElementById('submitStatus').textContent = 'Something went wrong. Please try again.';
       submitBtn.disabled = false;
@@ -935,6 +991,8 @@ document.getElementById('nomForm').addEventListener('submit', async function(e){
     document.getElementById('successTitle').textContent = 'Application received';
     document.getElementById('successBody').textContent = 'Jazakumullahu khairan for submitting. The Secretariat committee will review your application for ' + position + ' and reach out with next steps in shaa Allah.';
     document.getElementById('refCode').textContent = 'Reference: ' + submission.refCode;
+    document.getElementById('whatsappBtn').style.display = 'none';
+    document.getElementById('whatsappNote').style.display = 'none';
     document.getElementById('downloadBtn').style.display = 'inline-flex';
     document.getElementById('downloadNote').style.display = 'block';
     lastSubmission = submission;
