@@ -39,7 +39,7 @@
     z-index:0;
   }
   .wrap{position:relative; z-index:1; max-width:760px; margin:0 auto; padding:0 20px 80px;}
- 
+
   header{
     background: linear-gradient(160deg, var(--green-900) 0%, var(--green-950) 100%);
     color:var(--cream-50);
@@ -82,7 +82,7 @@
     display:flex; align-items:center; gap:6px;
   }
   .meta-pill b{color:var(--gold-500); font-weight:600;}
- 
+
   main{margin-top:-34px;}
   .card{
     background:var(--cream-50);
@@ -93,14 +93,14 @@
     box-shadow: 0 24px 48px -24px rgba(20,52,42,0.28);
   }
   .card + .card{margin-top:22px;}
- 
+
   .banner-card{
     background:var(--sage-100); border:1px solid var(--gold-600);
     border-radius:4px; padding:20px 24px; margin-bottom:22px;
     font-size:14px; color:var(--green-900);
   }
   .banner-card b{color:var(--green-900);}
- 
+
   .section-label{
     display:flex; align-items:baseline; gap:10px;
     margin-bottom:6px;
@@ -112,7 +112,7 @@
     font-family:'Fraunces', serif; font-weight:600; font-size:20px; color:var(--green-900);
   }
   .section-desc{font-size:13.5px; color:var(--ink-600); margin:0 0 22px; padding-bottom:18px; border-bottom:1px solid var(--line);}
- 
+
   .field{margin-bottom:20px;}
   .field:last-child{margin-bottom:0;}
   .field label{
@@ -122,7 +122,7 @@
   .field .hint{font-size:12px; color:var(--ink-600); font-weight:400; margin-left:4px;}
   .required{color:var(--danger); margin-left:2px;}
   .position-hint{font-size:12.5px; color:var(--ink-600); margin-top:7px; font-style:italic;}
- 
+
   input[type=text], input[type=tel], input[type=email], input[type=number], textarea, select{
     width:100%; padding:11px 13px; font-family:inherit; font-size:14.5px;
     border:1px solid var(--line); border-radius:3px; background:#fff;
@@ -134,7 +134,7 @@
   }
   input:disabled, select:disabled{background:var(--sage-100); color:var(--ink-600);}
   textarea{resize:vertical; min-height:88px;}
- 
+
   .radio-group{display:flex; flex-direction:column; gap:8px;}
   .radio-option{
     display:flex; align-items:flex-start; gap:10px;
@@ -146,26 +146,26 @@
   .radio-option input{margin-top:3px; accent-color:var(--green-800);}
   .radio-option .opt-text{font-size:14px;}
   .radio-option .opt-sub{font-size:12px; color:var(--ink-600); margin-top:2px;}
- 
+
   .grid-2{display:grid; grid-template-columns:1fr 1fr; gap:16px;}
   @media(max-width:560px){.grid-2{grid-template-columns:1fr;}}
- 
+
   .self-block{
     margin-top:10px; margin-bottom:4px; padding:14px 13px 4px 13px;
     display:none;
   }
   .self-block.show{display:block;}
- 
+
   .checklist{display:flex; flex-direction:column; gap:9px;}
   .chk-option{display:flex; align-items:flex-start; gap:9px; font-size:14px;}
   .chk-option input{margin-top:3px; accent-color:var(--green-800);}
- 
+
   .declare{
     background:var(--sage-100); border-radius:3px; padding:16px 16px;
     display:flex; gap:10px; align-items:flex-start; font-size:13.5px; color:var(--ink-600);
   }
   .declare input{margin-top:3px; accent-color:var(--green-800); flex-shrink:0;}
- 
+
   .submit-row{margin-top:26px; display:flex; align-items:center; gap:16px; flex-wrap:wrap;}
   button.submit-btn{
     background:var(--green-900); color:var(--cream-50); border:none;
@@ -179,7 +179,7 @@
   .error-msg{color:var(--danger); font-size:13px; margin-top:4px; display:none;}
   .error-msg.show{display:block;}
   .field.invalid input, .field.invalid textarea, .field.invalid select{border-color:var(--danger);}
- 
+
   .success-card{
     text-align:center; padding:56px 34px;
   }
@@ -201,13 +201,24 @@
   }
   .download-btn:hover{background:var(--green-800);}
   .download-note{font-size:12.5px; color:var(--ink-600); margin-top:12px; max-width:44ch; margin-left:auto; margin-right:auto;}
- 
+
   footer{text-align:center; padding:30px 20px 10px; font-size:12px; color:var(--ink-600);}
+
+  .choice-card{display:none;}
+  .choice-card.show{display:block;}
+  .choice-option{position:relative;}
+  .choice-option .opt-sub{display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin-top:4px;}
+  .current-tag{
+    display:inline-block; font-size:10.5px; font-weight:600; letter-spacing:0.04em;
+    text-transform:uppercase; color:var(--green-900); background:var(--gold-500);
+    border-radius:100px; padding:2px 8px;
+  }
+  .choice-note{font-size:12.5px; color:var(--ink-600); margin-top:14px;}
 </style>
 </head>
 <body>
 <div class="bg-pattern"></div>
- 
+
 <header>
   <div class="header-inner">
     <div class="mark-row">
@@ -236,19 +247,28 @@
     </div>
   </div>
 </header>
- 
+
 <div class="wrap">
   <main>
- 
+
     <div class="banner-card" id="acceptBanner" style="display:none;"></div>
- 
+
+    <div class="card choice-card" id="choiceCard">
+      <div class="section-label"><span class="section-num">·</span><span class="section-title">You've been nominated for more than one position</span></div>
+      <p class="section-desc">Different members have nominated you for the positions below. You can only pursue one at a time — pick which one to complete an application for. You can come back and change this any time before the portal closes, using any of your nomination email links.</p>
+      <div class="field">
+        <div class="radio-group" id="choiceGroup"></div>
+      </div>
+      <p class="choice-note" id="choiceNote"></p>
+    </div>
+
     <form id="nomForm" novalidate>
- 
+
       <!-- SECTION 1: POSITION -->
       <div class="card">
         <div class="section-label"><span class="section-num">01</span><span class="section-title">Position</span></div>
         <p class="section-desc">Which Secretariat Department role is this nomination for?</p>
- 
+
         <div class="field">
           <label>Position <span class="required">*</span></label>
           <select id="positionSelect" required>
@@ -268,12 +288,12 @@
           <div class="position-hint" id="positionHint"></div>
         </div>
       </div>
- 
+
       <!-- SECTION 2: WHO IS BEING NOMINATED -->
       <div class="card" id="nomTypeCard">
         <div class="section-label"><span class="section-num">02</span><span class="section-title">Who is being nominated</span></div>
         <p class="section-desc">Tell us whether this nomination is for yourself or for someone else in the community.</p>
- 
+
         <div class="field">
           <div class="radio-group" id="nomTypeGroup">
             <label class="radio-option" data-value="self">
@@ -317,15 +337,15 @@
           <div class="error-msg" id="err-nomType">Please select one option.</div>
         </div>
       </div>
- 
+
       <!-- FULL APPLICATION SECTIONS (self-nomination or accepted invite) -->
       <div id="fullApplicationSections">
- 
+
         <!-- SECTION 3 -->
         <div class="card">
           <div class="section-label"><span class="section-num">03</span><span class="section-title">Your information</span></div>
           <p class="section-desc">Basic details for the person being considered for the role.</p>
- 
+
           <div class="grid-2">
             <div class="field">
               <label>Full name <span class="required">*</span></label>
@@ -337,7 +357,7 @@
               <input type="number" id="candAge" min="15" max="90" placeholder="e.g. 24">
             </div>
           </div>
- 
+
           <div class="field">
             <label>Gender <span class="required">*</span></label>
             <div class="radio-group" id="genderGroup">
@@ -346,7 +366,7 @@
             </div>
             <div class="error-msg" id="err-gender">Please select an option.</div>
           </div>
- 
+
           <div class="grid-2">
             <div class="field">
               <label>Phone / WhatsApp number <span class="required">*</span></label>
@@ -359,7 +379,7 @@
               <div class="error-msg" id="err-candEmail">Please enter a valid email.</div>
             </div>
           </div>
- 
+
           <div class="field">
             <label>How long have you been an active member of IEFI? <span class="required">*</span></label>
             <select id="candDuration">
@@ -371,29 +391,29 @@
             </select>
             <div class="error-msg" id="err-candDuration">Please select your length of membership.</div>
           </div>
- 
+
           <div class="field">
             <label>Current role or department in IEFI, if any <span class="hint">(optional)</span></label>
             <input type="text" id="candCurrentRole" placeholder="e.g. Volunteer, Media Team">
           </div>
         </div>
- 
+
         <!-- SECTION 4 -->
         <div class="card">
           <div class="section-label"><span class="section-num">04</span><span class="section-title">Suitability for the role</span></div>
           <p class="section-desc">This is the section the committee will lean on most, so please be specific.</p>
- 
+
           <div class="field">
             <label>Why should you be considered for this role? <span class="required">*</span></label>
             <textarea id="candWhy" placeholder="Speak to your consistency, character, and reliability..."></textarea>
             <div class="error-msg" id="err-candWhy">Please share a reason.</div>
           </div>
- 
+
           <div class="field">
             <label>Relevant experience or skills <span class="hint">(e.g. admin work, event coordination, writing, leadership)</span></label>
             <textarea id="candExperience" placeholder="List any relevant experience, past or present..."></textarea>
           </div>
- 
+
           <div class="field">
             <label>Which of these can you comfortably do? <span class="hint">(select all that apply)</span></label>
             <div class="checklist">
@@ -404,7 +424,7 @@
               <label class="chk-option"><input type="checkbox" name="skills" value="Speak publicly with confidence">Speak publicly with confidence</label>
             </div>
           </div>
- 
+
           <div class="field">
             <label>How would you describe your grounding in Islamic knowledge? <span class="required">*</span></label>
             <select id="candKnowledge">
@@ -416,12 +436,12 @@
             <div class="error-msg" id="err-candKnowledge">Please select an option.</div>
           </div>
         </div>
- 
+
         <!-- SECTION 5 -->
         <div class="card">
           <div class="section-label"><span class="section-num">05</span><span class="section-title">Availability & commitment</span></div>
           <p class="section-desc">Most Secretariat roles need steady weekly time, so let's confirm capacity upfront.</p>
- 
+
           <div class="field">
             <label>Can you commit to the regular weekly responsibilities of this role? <span class="required">*</span></label>
             <div class="radio-group" id="availGroup">
@@ -431,15 +451,15 @@
             </div>
             <div class="error-msg" id="err-availability">Please select an option.</div>
           </div>
- 
+
           <div class="field">
             <label>Anything else the committee should know? <span class="hint">(optional)</span></label>
             <textarea id="candNotes" placeholder="Additional context, references, or notes..."></textarea>
           </div>
         </div>
- 
+
       </div>
- 
+
       <!-- SECTION 6: DECLARATION -->
       <div class="card">
         <label class="declare">
@@ -447,14 +467,14 @@
           <span id="declareText">I confirm the information provided is accurate to the best of my knowledge, and I understand it will be shared with the IEFI vetting committee. <span class="required">*</span></span>
         </label>
         <div class="error-msg" id="err-declare">Please confirm before submitting.</div>
- 
+
         <div class="submit-row">
           <button type="submit" class="submit-btn" id="submitBtn">Submit nomination</button>
           <span id="submitStatus" style="font-size:13px; color:var(--ink-600);"></span>
         </div>
       </div>
     </form>
- 
+
     <div class="card success-card" id="successCard" style="display:none;">
       <svg class="success-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4">
         <circle cx="12" cy="12" r="10"/>
@@ -467,12 +487,12 @@
       <button type="button" class="download-btn" id="downloadBtn" style="display:none;">⬇ Download my application (PDF)</button>
       <p class="download-note" id="downloadNote" style="display:none;">This is your personal copy for your own records — the vetting committee already received this same PDF automatically by email.</p>
     </div>
- 
+
   </main>
- 
+
   <footer>Islamic Enlightenment Foundation International — Service to Allah and to Humanity</footer>
 </div>
- 
+
 <script>
 // ---------- Position info ----------
 const POSITION_INFO = {
@@ -487,21 +507,21 @@ const POSITION_INFO = {
   "Data & IT Support Liaison": "Works with the IT Department to manage forms, databases, and digitization.",
   "Welfare & Follow-up Officer": "Follows up on meeting action points and checks on sick or bereaved members."
 };
- 
+
 const positionSelect = document.getElementById('positionSelect');
 const positionHint = document.getElementById('positionHint');
- 
+
 positionSelect.addEventListener('change', () => {
   positionHint.textContent = POSITION_INFO[positionSelect.value] || '';
   updateDeclareText();
 });
- 
+
 // ---------- URL-based acceptance mode ----------
 const params = new URLSearchParams(window.location.search);
 const acceptRef = params.get('ref');
 let acceptMode = false;
 let acceptData = null;
- 
+
 if(acceptRef){
   acceptMode = true;
   acceptData = {
@@ -514,33 +534,114 @@ if(acceptRef){
     position: params.get('position') || ''
   };
 }
- 
-function initAcceptMode(){
-  document.getElementById('nomTypeCard').style.display = 'none';
- 
+
+function renderAcceptBanner(){
   const banner = document.getElementById('acceptBanner');
   banner.style.display = 'block';
   banner.innerHTML = '<b>' + escapeHtml(acceptData.nominatorName || 'A fellow member') + '</b> nominated you for <b>' +
     escapeHtml(acceptData.position || 'a Secretariat Department role') +
     '</b> at IEFI. Complete the form below to accept the nomination and submit your application.';
- 
+}
+
+function applyAcceptSelection(){
   positionSelect.value = acceptData.position || '';
   positionSelect.disabled = true;
   positionHint.textContent = POSITION_INFO[acceptData.position] || '';
- 
+  renderAcceptBanner();
+  updateDeclareText();
+}
+
+function initAcceptMode(){
+  document.getElementById('nomTypeCard').style.display = 'none';
+
+  renderAcceptBanner();
+
+  positionSelect.value = acceptData.position || '';
+  positionSelect.disabled = true;
+  positionHint.textContent = POSITION_INFO[acceptData.position] || '';
+
   document.getElementById('candName').value = acceptData.name;
   document.getElementById('candEmail').value = acceptData.email;
   document.getElementById('candPhone').value = acceptData.phone;
- 
+
   document.getElementById('fullApplicationSections').style.display = 'block';
   document.getElementById('pageTitle').textContent = 'Complete Your Application';
   document.getElementById('pageLede').textContent = "You've been nominated — fill in the rest of your details below to accept and be considered by the committee.";
+
+  loadNomineeChoices();
 }
- 
+
+// ---------- Multiple-position chooser ----------
+async function loadNomineeChoices(){
+  if(!acceptData.email) return;
+  try {
+    const res = await fetch(APPS_SCRIPT_ENDPOINT + '?action=invites&email=' + encodeURIComponent(acceptData.email));
+    const body = await res.json();
+    if(body.status !== 'ok' || !Array.isArray(body.invites)) return;
+
+    const invites = body.invites.filter(inv => String(inv.status || '').indexOf('Withdrawn') === -1);
+    if(invites.length <= 1) return; // nothing to choose between
+
+    renderChoiceCard(invites);
+  } catch(err){
+    console.warn('Could not load nomination choices (non-blocking):', err);
+  }
+}
+
+function renderChoiceCard(invites){
+  const card = document.getElementById('choiceCard');
+  const group = document.getElementById('choiceGroup');
+  const note = document.getElementById('choiceNote');
+  group.innerHTML = '';
+
+  invites.forEach(inv => {
+    const isCurrent = inv.refCode === acceptData.ref;
+    const wasAccepted = String(inv.status || '').indexOf('Accepted') !== -1;
+
+    const label = document.createElement('label');
+    label.className = 'radio-option choice-option' + (isCurrent ? ' checked' : '');
+    label.dataset.ref = inv.refCode;
+
+    const input = document.createElement('input');
+    input.type = 'radio';
+    input.name = 'choiceRef';
+    input.value = inv.refCode;
+    input.checked = isCurrent;
+
+    const textWrap = document.createElement('div');
+    textWrap.innerHTML =
+      '<div class="opt-text">' + escapeHtml(inv.position) + '</div>' +
+      '<div class="opt-sub">Nominated by ' + escapeHtml(inv.nominatorName || 'a member') +
+      (wasAccepted ? ' <span class="current-tag">Currently chosen</span>' : '') + '</div>';
+
+    label.appendChild(input);
+    label.appendChild(textWrap);
+    group.appendChild(label);
+
+    label.addEventListener('click', () => {
+      group.querySelectorAll('.choice-option').forEach(o => o.classList.remove('checked'));
+      label.classList.add('checked');
+      input.checked = true;
+
+      acceptData = {
+        ...acceptData,
+        ref: inv.refCode,
+        position: inv.position,
+        nominatorName: inv.nominatorName,
+        nominatorPhone: inv.nominatorPhone
+      };
+      applyAcceptSelection();
+    });
+  });
+
+  note.textContent = 'Selecting a position here just changes which application you\'re completing right now — nothing is submitted until you press the submit button below.';
+  card.classList.add('show');
+}
+
 // ---------- Radio group visuals ----------
 const nominatorBlock = document.getElementById('nominatorBlock');
 const fullSections = document.getElementById('fullApplicationSections');
- 
+
 document.querySelectorAll('#nomTypeGroup .radio-option').forEach(opt => {
   opt.addEventListener('click', () => {
     document.querySelectorAll('#nomTypeGroup .radio-option').forEach(o => o.classList.remove('checked'));
@@ -556,21 +657,21 @@ document.querySelectorAll('#nomTypeGroup .radio-option').forEach(opt => {
     updateDeclareText();
   });
 });
- 
+
 document.querySelectorAll('#availGroup .radio-option').forEach(opt => {
   opt.addEventListener('click', () => {
     document.querySelectorAll('#availGroup .radio-option').forEach(o => o.classList.remove('checked'));
     opt.classList.add('checked');
   });
 });
- 
+
 document.querySelectorAll('#genderGroup .radio-option').forEach(opt => {
   opt.addEventListener('click', () => {
     document.querySelectorAll('#genderGroup .radio-option').forEach(o => o.classList.remove('checked'));
     opt.classList.add('checked');
   });
 });
- 
+
 // ---------- Declaration text ----------
 function currentMode(){
   if(acceptMode) return 'application';
@@ -578,12 +679,12 @@ function currentMode(){
   if(nomType && nomType.value === 'other') return 'invite';
   return 'application';
 }
- 
+
 function updateDeclareText(){
   const pos = positionSelect.value || 'this role';
   const declareText = document.getElementById('declareText');
   const submitBtn = document.getElementById('submitBtn');
- 
+
   if(currentMode() === 'invite'){
     declareText.innerHTML = 'I confirm the nominee\'s contact details are accurate to the best of my knowledge, and I understand they will receive an email inviting them to accept this nomination for ' + escapeHtml(pos) + '. <span class="required">*</span>';
     submitBtn.textContent = 'Send nomination invite';
@@ -592,53 +693,53 @@ function updateDeclareText(){
     submitBtn.textContent = acceptMode ? 'Submit application' : 'Submit nomination';
   }
 }
- 
+
 // Initial state: nothing selected yet, so full sections stay hidden until "self" is chosen
 if(!acceptMode){
   fullSections.style.display = 'none';
 }
- 
+
 function clearErrors(){
   document.querySelectorAll('.error-msg').forEach(e => e.classList.remove('show'));
   document.querySelectorAll('.field').forEach(f => f.classList.remove('invalid'));
 }
- 
+
 function showError(id){
   const el = document.getElementById('err-' + id);
   if(el) el.classList.add('show');
 }
- 
+
 function genRefCode(){
   const chars = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789';
   let code = 'IEFI-';
   for(let i=0;i<5;i++) code += chars[Math.floor(Math.random()*chars.length)];
   return code;
 }
- 
+
 function escapeHtml(str){
   if(str === undefined || str === null) return '';
   return String(str)
     .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
     .replace(/"/g,'&quot;').replace(/'/g,'&#039;');
 }
- 
+
 // ⚠️ Replace with your own Google Apps Script Web App URL.
 const APPS_SCRIPT_ENDPOINT = "https://script.google.com/macros/s/AKfycbyJsmdZyrvYZwecALb6EHKZthplPLyP_dcaSWjS8GmikKmBnlzGz5ttsox539ryAfU/exec";
 // ⚠️ Replace with your own Formspree endpoint.
 const FORMSPREE_ENDPOINT = "https://formspree.io/f/meajlywe";
- 
+
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
- 
+
 document.getElementById('nomForm').addEventListener('submit', async function(e){
   e.preventDefault();
   clearErrors();
   let valid = true;
- 
+
   const position = positionSelect.value;
   if(!position){ showError('position'); valid = false; }
- 
+
   const mode = currentMode();
- 
+
   if(mode === 'invite'){
     // ---- INVITE PATH: minimal nominator + nominee details only ----
     const nominatorName = document.getElementById('nominatorName').value.trim();
@@ -646,21 +747,21 @@ document.getElementById('nomForm').addEventListener('submit', async function(e){
     const nomineeName = document.getElementById('nomineeName').value.trim();
     const nomineeEmail = document.getElementById('nomineeEmail').value.trim();
     const nomineePhone = document.getElementById('nomineePhone').value.trim();
- 
+
     if(!nominatorName){ showError('nominatorName'); valid = false; }
     if(!nominatorPhone){ showError('nominatorPhone'); valid = false; }
     if(!nomineeName){ showError('nomineeName'); valid = false; }
     if(!nomineeEmail || !emailPattern.test(nomineeEmail)){ showError('nomineeEmail'); valid = false; }
     if(!nomineePhone){ showError('nomineePhone'); valid = false; }
- 
+
     const declared = document.getElementById('declareChk').checked;
     if(!declared){ showError('declare'); valid = false; }
- 
+
     if(!valid){
       document.getElementById('submitStatus').textContent = 'Please fix the highlighted fields.';
       return;
     }
- 
+
     const payload = {
       requestType: 'invite',
       refCode: genRefCode(),
@@ -672,11 +773,11 @@ document.getElementById('nomForm').addEventListener('submit', async function(e){
       nomineeEmail,
       nomineePhone
     };
- 
+
     const submitBtn = document.getElementById('submitBtn');
     submitBtn.disabled = true;
     document.getElementById('submitStatus').textContent = 'Sending invite...';
- 
+
     try {
       const res = await fetch(APPS_SCRIPT_ENDPOINT, {
         method: "POST",
@@ -684,7 +785,19 @@ document.getElementById('nomForm').addEventListener('submit', async function(e){
         body: JSON.stringify(payload)
       });
       if(!res.ok) throw new Error('Invite failed with status ' + res.status);
- 
+
+      const body = await res.json().catch(() => ({}));
+      if(body.status === 'error'){
+        if(body.message === 'DUPLICATE_NOMINATOR'){
+          document.getElementById('submitStatus').textContent =
+            'You have already nominated a member — each person may nominate only one other member. If you\'d like to change who you nominated, please contact the Secretariat committee.';
+        } else {
+          document.getElementById('submitStatus').textContent = body.message || 'Something went wrong. Please try again.';
+        }
+        submitBtn.disabled = false;
+        return;
+      }
+
       document.getElementById('nomForm').style.display = 'none';
       document.getElementById('successCard').style.display = 'block';
       document.getElementById('successTitle').textContent = 'Invitation sent';
@@ -698,45 +811,45 @@ document.getElementById('nomForm').addEventListener('submit', async function(e){
       submitBtn.disabled = false;
       console.error(err);
     }
- 
+
     return;
   }
- 
+
   // ---- APPLICATION PATH: self-nomination or completed invite ----
   const candName = document.getElementById('candName').value.trim();
   if(!candName){ showError('candName'); valid = false; }
- 
+
   const candPhone = document.getElementById('candPhone').value.trim();
   if(!candPhone){ showError('candPhone'); valid = false; }
- 
+
   const candEmail = document.getElementById('candEmail').value.trim();
   if(!candEmail || !emailPattern.test(candEmail)){ showError('candEmail'); valid = false; }
- 
+
   const gender = document.querySelector('input[name=gender]:checked');
   if(!gender){ showError('gender'); valid = false; }
- 
+
   const candDuration = document.getElementById('candDuration').value;
   if(!candDuration){ showError('candDuration'); valid = false; }
- 
+
   const candWhy = document.getElementById('candWhy').value.trim();
   if(!candWhy){ showError('candWhy'); valid = false; }
- 
+
   const candKnowledge = document.getElementById('candKnowledge').value;
   if(!candKnowledge){ showError('candKnowledge'); valid = false; }
- 
+
   const availability = document.querySelector('input[name=availability]:checked');
   if(!availability){ showError('availability'); valid = false; }
- 
+
   const declared = document.getElementById('declareChk').checked;
   if(!declared){ showError('declare'); valid = false; }
- 
+
   if(!valid){
     document.getElementById('submitStatus').textContent = 'Please fix the highlighted fields.';
     return;
   }
- 
+
   const skills = Array.from(document.querySelectorAll('input[name=skills]:checked')).map(c => c.value);
- 
+
   const submission = {
     requestType: 'application',
     refCode: acceptMode ? acceptData.ref : genRefCode(),
@@ -759,11 +872,11 @@ document.getElementById('nomForm').addEventListener('submit', async function(e){
     availability: availability.value,
     notes: document.getElementById('candNotes').value.trim()
   };
- 
+
   const submitBtn = document.getElementById('submitBtn');
   submitBtn.disabled = true;
   document.getElementById('submitStatus').textContent = 'Submitting...';
- 
+
   try {
     let pdfBlob = null;
     try {
@@ -772,7 +885,7 @@ document.getElementById('nomForm').addEventListener('submit', async function(e){
     } catch(pdfErr){
       console.error('PDF generation failed, submitting without attachment:', pdfErr);
     }
- 
+
     const formData = new FormData();
     Object.entries(submission).forEach(([key, value]) => {
       formData.append(key, Array.isArray(value) ? value.join(', ') : value);
@@ -780,13 +893,13 @@ document.getElementById('nomForm').addEventListener('submit', async function(e){
     if(pdfBlob){
       formData.append('attachment', pdfBlob, 'IEFI-Nomination-' + submission.refCode + '.pdf');
     }
- 
+
     let res = await fetch(FORMSPREE_ENDPOINT, {
       method: "POST",
       headers: { "Accept": "application/json" },
       body: formData
     });
- 
+
     if(!res.ok && pdfBlob){
       console.warn('Submission with attachment failed (status ' + res.status + '), retrying without attachment.');
       const plainFormData = new FormData();
@@ -799,13 +912,13 @@ document.getElementById('nomForm').addEventListener('submit', async function(e){
         body: plainFormData
       });
     }
- 
+
     if(!res.ok){
       const bodyText = await res.text().catch(() => '');
       console.error('Formspree submission failed:', res.status, bodyText);
       throw new Error('Submission failed with status ' + res.status);
     }
- 
+
     // Log the completed application in the private sheet too (best-effort).
     try {
       await fetch(APPS_SCRIPT_ENDPOINT, {
@@ -816,7 +929,7 @@ document.getElementById('nomForm').addEventListener('submit', async function(e){
     } catch(scriptErr){
       console.warn('Apps Script logging failed (non-blocking):', scriptErr);
     }
- 
+
     document.getElementById('nomForm').style.display = 'none';
     document.getElementById('successCard').style.display = 'block';
     document.getElementById('successTitle').textContent = 'Application received';
@@ -831,17 +944,17 @@ document.getElementById('nomForm').addEventListener('submit', async function(e){
     console.error(err);
   }
 });
- 
+
 // ---------- PDF builder ----------
 let lastSubmission = null;
- 
+
 function buildApplicationPdf(sub){
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF({ unit: 'pt', format: 'a4' });
   const pageWidth = doc.internal.pageSize.getWidth();
   const margin = 48;
   let y = 60;
- 
+
   doc.setFont('times', 'bold');
   doc.setFontSize(16);
   doc.setTextColor(20, 52, 42);
@@ -850,19 +963,19 @@ function buildApplicationPdf(sub){
   doc.setFontSize(13);
   doc.text(sub.position + ' — Nomination Application', margin, y);
   y += 20;
- 
+
   doc.setDrawColor(185, 139, 51);
   doc.setLineWidth(1);
   doc.line(margin, y, pageWidth - margin, y);
   y += 26;
- 
+
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(10);
   doc.setTextColor(75, 84, 69);
   doc.text('Reference: ' + sub.refCode, margin, y);
   doc.text('Submitted: ' + new Date(sub.submittedAt).toLocaleString(), pageWidth - margin, y, { align: 'right' });
   y += 26;
- 
+
   const rows = [
     ['Position', sub.position],
     ['Nomination type', sub.nominationType === 'self' ? 'Self-nomination' : 'Nominated by another member'],
@@ -885,47 +998,47 @@ function buildApplicationPdf(sub){
     ['Availability', sub.availability],
     ['Additional notes', sub.notes || '—'],
   );
- 
+
   const labelWidth = 150;
   const valueWidth = pageWidth - margin * 2 - labelWidth;
- 
+
   rows.forEach(([label, value]) => {
     const valueLines = doc.splitTextToSize(String(value), valueWidth);
     const rowHeight = Math.max(22, valueLines.length * 13 + 10);
- 
+
     if(y + rowHeight > doc.internal.pageSize.getHeight() - 50){
       doc.addPage();
       y = 60;
     }
- 
+
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(9.5);
     doc.setTextColor(20, 52, 42);
     doc.text(label, margin, y);
- 
+
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(10);
     doc.setTextColor(32, 38, 30);
     doc.text(valueLines, margin + labelWidth, y);
- 
+
     y += rowHeight;
   });
- 
+
   y += 10;
   doc.setFont('helvetica', 'italic');
   doc.setFontSize(9);
   doc.setTextColor(75, 84, 69);
   doc.text('Service to Allah and to Humanity', margin, doc.internal.pageSize.getHeight() - 30);
- 
+
   return doc;
 }
- 
+
 document.getElementById('downloadBtn').addEventListener('click', () => {
   if(!lastSubmission) return;
   const doc = buildApplicationPdf(lastSubmission);
   doc.save('IEFI-Nomination-' + lastSubmission.refCode + '.pdf');
 });
- 
+
 // ---------- Kick things off ----------
 if(acceptMode){
   initAcceptMode();
